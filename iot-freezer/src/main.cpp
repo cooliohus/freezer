@@ -59,8 +59,8 @@ float vout;
 
 
 boolean state = false;
-#define high_on 0.0
-#define low_off -5.0
+#define high_on 1.0
+#define low_off -3.0
 
 unsigned long mydelay;
 
