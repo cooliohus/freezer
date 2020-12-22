@@ -17,15 +17,6 @@
 
 /************************** Configuration ***********************************/
 
-/*
- * Library versions known to work
- * ----------------------------- 
- * 
- * Adafruit ESP8266 v1.0.0
- * AdafruitIO v2.7.2
- * Adafruit MQTT v0.20.1
- *
-*/
 // edit the config.h tab and enter your Adafruit IO credentials
 // and any additional configuration needed for WiFi, cellular,
 // or ethernet clients.
@@ -34,23 +25,11 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-// defines for temp / humidity sensor
-//#define DHTPIN 12
-//#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
-
 // defines for setting the counter for periodic interrupts
 unsigned long maxDelay = 26843542;
 #define oneTick 3.2                    // 3.2 uS per tick - 80MHz clock  DIV_256
 #define oneSecond 1000000 / oneTick    // one second (1000000 uS / tick)
 #define IODELAY 15                     // generate interrupt every 15 seconds
-
-
-unsigned long counter = 0;
-unsigned long ftempcnt = 0;
-unsigned long fhumcnt = 0;
-int vin;
-float vout;
-
 
 boolean state = false;
 #define high_on 32.0
@@ -71,7 +50,6 @@ AdafruitIO_Feed *feedfreezer = iox.feed("freezertemp");
 // Data wire is plugged into port 2 on the Arduino
 #define ONE_WIRE_BUS 2
 #define TEMPERATURE_PRECISION 9
-
 #define ON_LED 16
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
@@ -82,18 +60,13 @@ DallasTemperature sensors(&oneWire);
 
 // arrays to hold device addresses
 DeviceAddress devambient = { 0x28, 0xFF, 0x1D, 0xCE, 0x39, 0x20, 0x01, 0x3B };
-//DeviceAddress devfreezer = { 0x28, 0xC6, 0xB0, 0xD5, 0x39, 0x20, 0x01, 0x33 };
 DeviceAddress devfreezer = { 0x28, 0xD8, 0x19, 0xCD, 0x39, 0x20, 0x01, 0x9F };
 
-//inx0 0 Address: 28C6B0D539200133
-//inx1 0 Address: 28FF1DCE3920013B
-
-//  Freezer sensor = 28 D8 19 CD 39 20 01 9F
+//DeviceAddress devfreezer = { 0x28, 0xC6, 0xB0, 0xD5, 0x39, 0x20, 0x01, 0x33 };
 
 
 void printTemperature(DeviceAddress deviceAddress);
 void printAddress(DeviceAddress deviceAddress);
-
 
 // This function is called each time the interval timer times out
 //
@@ -108,21 +81,18 @@ void IRAM_ATTR myIsrTimer() {
 
 // this function is called whenever a 'digital' feed message
 // is received from Adafruit IO acknowledging receipt of messages
-// send to ada io, it was attached to the 'digital' feed in
-// the setup() function below.  ... and this function has grown,
-// needs optimization :-(
+// sent to ada io, it was attached to the 'digital' feed in
+// the setup() function below.
 
 void handleMessage(AdafruitIO_Data *data) {
 
   gotReply = true;
 
   if (strcmp((char *)data->feedName(),"freezertemp")== 0) {
-    ftempcnt += 1;
     Serial.print("ack from freezertemp: ");
     Serial.println(data->toChar());
   }
   else if (strcmp((char *)data->feedName(),"ambienttemp")== 0) {
-    ftempcnt += 1;
     Serial.print("ack from ambienttemp: ");
     Serial.println(data->toChar());
   }
@@ -133,14 +103,10 @@ void handleMessage(AdafruitIO_Data *data) {
   }
 }
 
-
-
 void setup() {
 
   // start the serial connection
   Serial.begin(115200);
-  
-  // wait for serial monitor to open
   while(! Serial);
     delay(100);
 
@@ -149,8 +115,6 @@ void setup() {
   // connect to io.adafruit.com
   Serial.print("Connecting to Adafruit IO");
   iox.connect();   // connect and sign in to adaio
-
-  // wait for a connection
   
   while(iox.status() < AIO_CONNECTED) {
     delay(500);
@@ -178,7 +142,7 @@ void setup() {
   
   Serial.println("Dallas Temperature IC Control Library Demo");
 
-  // Start up the library
+  // Start up the sensor library
   sensors.begin();
 
   // locate devices on the bus
