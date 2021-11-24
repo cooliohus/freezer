@@ -245,7 +245,7 @@ void loop() {
 
   iox.run();
 
-  if (intCnt > 0) {  // Period is governed by timer interrupt handler.  For times > max delay
+  if (intCnt > 0) {  // Period is governed by timer interrupt handler.  For times > max delay test
                      // set comparison to an integer multiple of mydelay.  E.G. if mydelay is
                      // 15 seconds the intCnt > 19 is 5 minutes
     
