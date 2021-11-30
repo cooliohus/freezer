@@ -19,7 +19,7 @@
 
 // edit the config.h tab and enter your Adafruit IO credentials
 // and any additional configuration needed for WiFi, cellular,
-// or ethernet clients.
+// or ethernet clients - eric.
 //
 #include "config.h"   // configuration stuff
 #include <OneWire.h>
@@ -112,7 +112,7 @@ void setup() {
 
   delay(1000);  // wait for serial port to fully initialize
   
-  // connect to io.adafruit.com
+  // connect to io.adafruit.comhttp://coolioh.com/
   Serial.print("Connecting to Adafruit IO");
   iox.connect();   // connect and sign in to adaio
   
@@ -175,7 +175,7 @@ void setup() {
 
   Serial.print("Freezer sensor address: ");
   printAddress(devfreezer);
-  Serial.println();
+  Serial.println();http://coolioh.com/
 
   // set the resolution to 9 bit per device
   
