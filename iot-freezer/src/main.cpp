@@ -32,8 +32,8 @@ unsigned long maxDelay = 26843542;
 #define IODELAY 15                     // generate interrupt every 15 seconds
 
 boolean state = false;
-#define high_on 32.0
-#define low_off 25.0
+#define high_on 3.0
+#define low_off -2.0
 
 unsigned long mydelay;
 
@@ -196,6 +196,8 @@ void setup() {
 
   pinMode(ON_LED,OUTPUT);
   digitalWrite(ON_LED,LOW);
+
+  intCnt = 25;
 }
 
 // function to print a device address
